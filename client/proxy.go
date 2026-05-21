@@ -1698,6 +1698,9 @@ func responseEndpointHasNoTokenUsage(endpoint string) bool {
 	if ep == "" {
 		ep = "/"
 	}
+	if ep == "/backend-api/codex/responses/compact" {
+		return true
+	}
 	// 复用 opaque denylist：这些接口天然无 token usage
 	for _, kw := range opaqueEndpointDenylist {
 		if strings.Contains(ep, strings.ToLower(kw)) {
