@@ -29,6 +29,8 @@ func TestShouldMonitorAIEndpointSkipsTelemetry(t *testing.T) {
 		{endpoint: "/backend-api/accounts/check", want: false},
 		{endpoint: "/backend-api/codex/responses/compact", want: false},
 		{endpoint: "/backend-api/wham/usage", want: false},
+		{endpoint: "/backend-api/plugins/featured", want: false},
+		{endpoint: "/backend-api/ps/plugins/installed", want: false},
 		{endpoint: "/backend-api/codex/responses", want: true},
 		{endpoint: "/v1/chat/completions", want: true},
 	}

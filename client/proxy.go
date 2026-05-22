@@ -1741,6 +1741,12 @@ func isNoUsageMetadataEndpoint(ep string) bool {
 	if ep == "/agents/sessions" || strings.HasSuffix(ep, "/agents/sessions") || strings.Contains(ep, "/agents/sessions/") {
 		return true
 	}
+	// ChatGPT 插件/商店元数据接口只返回插件清单或权限状态；403 时也常返回整页 HTML，
+	// 没有 token usage 语义，不能按模型响应错误打印正文。
+	if ep == "/backend-api/plugins" || strings.HasPrefix(ep, "/backend-api/plugins/") ||
+		ep == "/backend-api/ps/plugins" || strings.HasPrefix(ep, "/backend-api/ps/plugins/") {
+		return true
+	}
 	if ep == "/models" || ep == "/v1/models" || ep == "/api/v1/models" ||
 		ep == "/models/session" || strings.HasSuffix(ep, "/models/session") ||
 		ep == "/agents" || strings.HasSuffix(ep, "/agents") {
