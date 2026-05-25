@@ -1092,8 +1092,12 @@ func (s *ProxyServer) handleWebSocketMITM(clientConn net.Conn, clientReader *buf
 	}()
 	first := <-done
 	if diag {
-		log.Printf("[MITM/ws/diag %s] first direction ended=%s bytes=%d err=%v total_after=%s waiting peer", wsID, first.direction, first.bytes, first.err, time.Since(started))
+		log.Printf("[MITM/ws/diag %s] first direction ended=%s bytes=%d err=%v total_after=%s closing peers", wsID, first.direction, first.bytes, first.err, time.Since(started))
 	}
+	// WebSocket 是一条逻辑连接；任一方向结束后必须关闭两端 socket，
+	// 否则另一侧 goroutine 可能卡在半关闭连接上，表现为 CloseWait 且 Codex 一直 Working。
+	_ = clientConn.Close()
+	_ = upstreamConn.Close()
 	second := <-done
 	if diag {
 		log.Printf("[MITM/ws/diag %s] second direction ended=%s bytes=%d err=%v total_after=%s closing tunnel", wsID, second.direction, second.bytes, second.err, time.Since(started))
